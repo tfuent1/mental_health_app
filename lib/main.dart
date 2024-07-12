@@ -4,13 +4,12 @@ import 'providers/emotion_provider.dart';
 import 'providers/journal_provider.dart';
 import 'providers/duty_provider.dart';
 import 'screens/home_screen.dart';
-import 'screens/log_emotion_screen.dart';
+import 'screens/emotions_screen.dart';
 import 'screens/journal_screen.dart';
 import 'screens/duties_screen.dart';
-import 'screens/view_emotions_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -32,9 +31,8 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => HomeScreen(),
-          '/log-emotion': (context) => LogEmotionScreen(),
-          '/view-emotions': (context) => ViewEmotionsScreen(),
-          '/journal': (context) => JournalScreen(),
+          '/emotions': (context) => const EmotionsScreen(),
+          '/journal': (context) => const JournalScreen(),
           '/duties': (context) => DutiesScreen(),
         },
       ),

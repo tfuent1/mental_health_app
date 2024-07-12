@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/emotion.dart';
 
 class EmotionProvider with ChangeNotifier {
-  final List<Emotion> _emotions = [];
+  List<Emotion> _emotions = [];
 
   List<Emotion> get emotions => _emotions;
 
@@ -11,5 +11,8 @@ class EmotionProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Additional methods for managing emotions if needed
+  void removeEmotion(String id) {
+    _emotions.removeWhere((emotion) => emotion.id == id);
+    notifyListeners();
+  }
 }

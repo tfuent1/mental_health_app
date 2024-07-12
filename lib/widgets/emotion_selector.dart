@@ -27,7 +27,7 @@ class EmotionSelector extends StatelessWidget {
                 id: DateTime.now().toString(),
                 name: value,
                 intensity: int.parse(_intensityController.text),
-                date: DateTime.now(),
+                date: DateTime.now(), description: '',
               );
               Provider.of<EmotionProvider>(context, listen: false).addEmotion(emotion);
             }
