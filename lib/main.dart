@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'providers/emotion_provider.dart';
+import 'providers/mood_provider.dart';
 import 'providers/journal_provider.dart';
 import 'providers/duty_provider.dart';
 import 'screens/home_screen.dart';
-import 'screens/emotions_screen.dart';
+import 'screens/mood_screen.dart';
 import 'screens/journal_screen.dart';
 import 'screens/duties_screen.dart';
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => EmotionProvider()),
+        ChangeNotifierProvider(create: (_) => MoodProvider()),
         ChangeNotifierProvider(create: (_) => JournalProvider()),
         ChangeNotifierProvider(create: (_) => DutyProvider()),
       ],
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => HomeScreen(),
-          '/emotions': (context) => const EmotionsScreen(),
+          '/moods': (context) => const MoodScreen(),
           '/journal': (context) => const JournalScreen(),
           '/duties': (context) => DutiesScreen(),
         },

@@ -1,14 +1,12 @@
-class Emotion {
+class Mood {
   String id;
   String name;
-  int intensity;
   DateTime date;
   String description;
 
-  Emotion({
+  Mood({
     required this.id,
     required this.name,
-    required this.intensity,
     required this.date,
     required this.description,
   });

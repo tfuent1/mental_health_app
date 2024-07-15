@@ -1,35 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/emotion_provider.dart';
-import '../models/emotion.dart';
+import '../providers/mood_provider.dart';
+import '../models/mood.dart';
 
-class EmotionsScreen extends StatefulWidget {
-  const EmotionsScreen({super.key});
+class MoodScreen extends StatefulWidget {
+  const MoodScreen({super.key});
 
   @override
-  _EmotionsScreenState createState() => _EmotionsScreenState();
+  _MoodScreenState createState() => _MoodScreenState();
 }
 
-class _EmotionsScreenState extends State<EmotionsScreen> {
+class _MoodScreenState extends State<MoodScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   double _intensity = 1;
-  String? _selectedEmotion;
+  String? _selectedMood;
 
   @override
   Widget build(BuildContext context) {
-    final emotions = [
-      {'emoji': '😊', 'name': 'Happy'},
-      {'emoji': '😢', 'name': 'Sad'},
-      {'emoji': '😠', 'name': 'Angry'},
-      {'emoji': '😨', 'name': 'Fearful'},
-      {'emoji': '😒', 'name': 'Disgusted'},
-      {'emoji': '😔', 'name': 'Bad'},
-      {'emoji': '😲', 'name': 'Surprised'},
+    final moods = [
+      {'emoji': 'img1', 'name': 'Terrific '},
+      {'emoji': 'img2', 'name': 'Good'},
+      {'emoji': 'img3', 'name': 'Meh'},
+      {'emoji': 'img4', 'name': 'Bad'},
+      {'emoji': 'img5', 'name': 'Terrible'},
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Emotions'),
+        title: const Text('Mood'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -37,19 +35,19 @@ class _EmotionsScreenState extends State<EmotionsScreen> {
           children: <Widget>[
             Wrap(
               spacing: 10.0,
-              children: emotions.map((emotion) {
+              children: moods.map((mood) {
                 return ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      _selectedEmotion = emotion['name'];
+                      _selectedMood = mood['name'] as String?;
                     });
                   },
-                  child: Text(emotion['emoji']!),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _selectedEmotion == emotion['name']
+                    backgroundColor: _selectedMood == mood['name']
                         ? Colors.blue
                         : Colors.grey,
                   ),
+                  child: Text(mood['emoji']!),
                 );
               }).toList(),
             ),
@@ -74,40 +72,38 @@ class _EmotionsScreenState extends State<EmotionsScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if (_selectedEmotion != null) {
-                  final emotion = Emotion(
+                if (_selectedMood != null) {
+                  final mood = Mood(
                     id: DateTime.now().toString(),
-                    name: _selectedEmotion!,
-                    intensity: _intensity.round(),
+                    name: _selectedMood!,
                     date: DateTime.now(),
                     description: _descriptionController.text,
                   );
-                  Provider.of<EmotionProvider>(context, listen: false).addEmotion(emotion);
+                  Provider.of<MoodProvider>(context, listen: false).addMood(mood);
                   setState(() {
-                    _selectedEmotion = null;
+                    _selectedMood = null;
                     _intensity = 1;
                     _descriptionController.clear();
                   });
                 }
               },
-              child: const Text('Log Emotion'),
+              child: const Text('Log Mood'),
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: Consumer<EmotionProvider>(
-                builder: (context, emotionProvider, child) {
+              child: Consumer<MoodProvider>(
+                builder: (context, moodProvider, child) {
                   return ListView.builder(
-                    itemCount: emotionProvider.emotions.length,
+                    itemCount: moodProvider.moods.length,
                     itemBuilder: (context, index) {
-                      final emotion = emotionProvider.emotions[index];
+                      final mood = moodProvider.moods[index];
                       return ListTile(
-                        title: Text(emotion.name),
+                        title: Text(mood.name),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Intensity: ${emotion.intensity}'),
-                            Text('Description: ${emotion.description}'),
-                            Text('Date: ${emotion.date}'),
+                            Text('Description: ${mood.description}'),
+                            Text('Date: ${mood.date}'),
                           ],
                         ),
                       );
