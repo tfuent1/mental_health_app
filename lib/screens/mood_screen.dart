@@ -12,17 +12,17 @@ class MoodScreen extends StatefulWidget {
 
 class _MoodScreenState extends State<MoodScreen> {
   final TextEditingController _descriptionController = TextEditingController();
-  double _intensity = 1;
   String? _selectedMood;
+  double _imageSize = 75;
 
   @override
   Widget build(BuildContext context) {
     final moods = [
-      {'emoji': 'img1', 'name': 'Terrific '},
-      {'emoji': 'img2', 'name': 'Good'},
-      {'emoji': 'img3', 'name': 'Meh'},
-      {'emoji': 'img4', 'name': 'Bad'},
-      {'emoji': 'img5', 'name': 'Terrible'},
+      {'emoji': 'images/terrific.png', 'name': 'Terrific'},
+      {'emoji': 'images/good.png', 'name': 'Good'},
+      {'emoji': 'images/meh.png', 'name': 'Meh'},
+      {'emoji': 'images/bad.png', 'name': 'Bad'},
+      {'emoji': 'images/terrible.png', 'name': 'Terrible'},
     ];
 
     return Scaffold(
@@ -33,38 +33,32 @@ class _MoodScreenState extends State<MoodScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            Wrap(
-              spacing: 10.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: moods.map((mood) {
-                return ElevatedButton(
-                  onPressed: () {
+                return GestureDetector(
+                  onTap: () {
                     setState(() {
                       _selectedMood = mood['name'] as String?;
                     });
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _selectedMood == mood['name']
-                        ? Colors.blue
-                        : Colors.grey,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: _selectedMood == mood['name'] ? 75 : 65,
+                    width: _selectedMood == mood['name'] ? 75 : 65,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _selectedMood == mood['name'] ? Colors.blue : Colors.transparent,
+                        width: 3,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Image.asset(mood['emoji'] as String),
                   ),
-                  child: Text(mood['emoji']!),
                 );
               }).toList(),
             ),
             const SizedBox(height: 20),
-            Text('Intensity: ${_intensity.round()}'),
-            Slider(
-              value: _intensity,
-              min: 1,
-              max: 10,
-              divisions: 9,
-              label: _intensity.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _intensity = value;
-                });
-              },
-            ),
             TextField(
               controller: _descriptionController,
               decoration: const InputDecoration(labelText: 'Description'),
@@ -82,7 +76,6 @@ class _MoodScreenState extends State<MoodScreen> {
                   Provider.of<MoodProvider>(context, listen: false).addMood(mood);
                   setState(() {
                     _selectedMood = null;
-                    _intensity = 1;
                     _descriptionController.clear();
                   });
                 }
