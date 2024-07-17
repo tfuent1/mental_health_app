@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../models/duty.dart';
+import 'package:mental_health_app/models/duty.dart';
 
 class DutyProvider with ChangeNotifier {
   final List<Duty> _duties = [];

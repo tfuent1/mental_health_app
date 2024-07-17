@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/mood.dart';
 
 class MoodProvider with ChangeNotifier {
@@ -15,23 +15,20 @@ class MoodProvider with ChangeNotifier {
 
   Future<void> _fetchMoods() async {
     final snapshot = await moodsCollection.get();
-    _moods.clear();
-    snapshot.docs.forEach((doc) {
-      _moods.add(Mood.fromFirestore(doc));
-    });
-    notifyListeners();
+    _moods = snapshot.docs.map((doc) => Mood.fromFirestore(doc)).toList();
+    notifyListeners();  // Notify listeners after fetching data
   }
 
   Future<void> addMood(Mood mood) async {
     final docRef = await moodsCollection.add(mood.toFirestore());
     mood.id = docRef.id;
     _moods.add(mood);
-    notifyListeners();
+    notifyListeners();  // Notify listeners after adding a mood
   }
 
   Future<void> removeMood(String id) async {
     await moodsCollection.doc(id).delete();
     _moods.removeWhere((mood) => mood.id == id);
-    notifyListeners();
+    notifyListeners();  // Notify listeners after removing a mood
   }
 }

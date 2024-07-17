@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/duty.dart';
-import '../providers/duty_provider.dart';
+import '../providers/duty_provider.dart' as provider;
 import '../widgets/duty_list.dart';
 
 class DutiesScreen extends StatelessWidget {
@@ -35,7 +35,7 @@ class DutiesScreen extends StatelessWidget {
                         id: DateTime.now().toString(),
                         title: _dutyController.text,
                       );
-                      Provider.of<DutyProvider>(context, listen: false).addDuty(duty);
+                      Provider.of<provider.DutyProvider>(context, listen: false).addDuty(duty);
                       _dutyController.clear();
                     }
                   },
@@ -44,7 +44,7 @@ class DutiesScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Consumer<DutyProvider>(
+            child: Consumer<provider.DutyProvider>(
               builder: (context, dutyProvider, child) {
                 return DutyList(duties: dutyProvider.duties);
               },

@@ -13,7 +13,6 @@ class MoodScreen extends StatefulWidget {
 class _MoodScreenState extends State<MoodScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   String? _selectedMood;
-  double _imageSize = 75;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +65,7 @@ class _MoodScreenState extends State<MoodScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if (_selectedMood != null) {
+                if (_selectedMood != null && _descriptionController.text.isNotEmpty) {
                   final mood = Mood(
                     id: DateTime.now().toString(),
                     name: _selectedMood!,

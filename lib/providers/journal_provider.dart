@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../models/journal_entry.dart';
+import 'package:mental_health_app/models/journal_entry.dart';
 
 class JournalProvider with ChangeNotifier {
   final List<JournalEntry> _entries = [];
