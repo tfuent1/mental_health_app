@@ -33,6 +33,7 @@ class DutiesScreen extends StatelessWidget {
                     if (_dutyController.text.isNotEmpty) {
                       final duty = Duty(
                         id: DateTime.now().toString(),
+                        uid: '',
                         title: _dutyController.text,
                       );
                       Provider.of<provider.DutyProvider>(context, listen: false).addDuty(duty);

@@ -4,7 +4,7 @@ import '../services/quote_service.dart';
 import '../providers/auth_provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key); // Remove 'const' here
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              await Provider.of<AuthProvider>(context, listen: false).logout();
+              await Provider.of<AuthProvider>(context, listen: false).logout(context);
               Navigator.pushReplacementNamed(context, '/login');
             },
           ),

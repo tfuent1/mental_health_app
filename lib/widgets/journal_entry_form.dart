@@ -47,7 +47,7 @@ class JournalEntryForm extends StatelessWidget {
                     id: DateTime.now().toString(),
                     title: _titleController.text,
                     content: _contentController.text,
-                    date: DateTime.now(),
+                    date: DateTime.now(), uid: '',
                   );
                   Provider.of<JournalProvider>(context, listen: false).addEntry(entry);
                   _titleController.clear();

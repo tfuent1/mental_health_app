@@ -68,6 +68,7 @@ class _MoodScreenState extends State<MoodScreen> {
                 if (_selectedMood != null && _descriptionController.text.isNotEmpty) {
                   final mood = Mood(
                     id: DateTime.now().toString(),
+                    uid: '',
                     name: _selectedMood!,
                     date: DateTime.now(),
                     description: _descriptionController.text,
