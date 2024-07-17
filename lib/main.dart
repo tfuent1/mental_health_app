@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'providers/mood_provider.dart';
 import 'providers/journal_provider.dart';
@@ -8,7 +9,9 @@ import 'screens/mood_screen.dart';
 import 'screens/journal_screen.dart';
 import 'screens/duties_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

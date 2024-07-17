@@ -99,6 +99,12 @@ class _MoodScreenState extends State<MoodScreen> {
                             Text('Date: ${mood.date}'),
                           ],
                         ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            Provider.of<MoodProvider>(context, listen: false).removeMood(mood.id);
+                          },
+                        ),
                       );
                     },
                   );
