@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailOrUsernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   LoginScreen({super.key});
@@ -19,8 +19,8 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              controller: _emailOrUsernameController,
+              decoration: const InputDecoration(labelText: 'Email or Username'),
             ),
             TextField(
               controller: _passwordController,
@@ -32,7 +32,7 @@ class LoginScreen extends StatelessWidget {
               onPressed: () async {
                 try {
                   await Provider.of<AuthProvider>(context, listen: false)
-                      .login(_emailController.text, _passwordController.text);
+                      .login(_emailOrUsernameController.text, _passwordController.text);
                   Navigator.pushReplacementNamed(context, '/home');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
