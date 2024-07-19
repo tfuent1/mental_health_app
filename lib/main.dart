@@ -6,9 +6,6 @@ import 'providers/journal_provider.dart';
 import 'providers/duty_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/home_screen.dart';
-import 'screens/mood_screen.dart';
-import 'screens/journal_screen.dart';
-import 'screens/duties_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 
@@ -42,9 +39,6 @@ class MyApp extends StatelessWidget {
               '/login': (context) => LoginScreen(),
               '/register': (context) => RegisterScreen(),
               '/home': (context) => HomeScreen(),
-              '/moods': (context) => const MoodScreen(),
-              '/journal': (context) => const JournalScreen(),
-              '/duties': (context) => DutiesScreen(),
             },
           );
         },
