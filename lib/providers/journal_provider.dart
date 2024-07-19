@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mental_health_app/models/journal_entry.dart';
+import '../models/journal_entry.dart';
 
 class JournalProvider with ChangeNotifier {
   List<JournalEntry> _entries = [];
@@ -10,7 +10,6 @@ class JournalProvider with ChangeNotifier {
   List<JournalEntry> get entries => _entries;
 
   JournalProvider() {
-    _fetchEntries();
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         _fetchEntries();
@@ -41,6 +40,19 @@ class JournalProvider with ChangeNotifier {
       entry.id = docRef.id;
       entry.uid = user.uid;
       _entries.add(entry);
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateEntry(String id, String title, String content) async {
+    final index = _entries.indexWhere((entry) => entry.id == id);
+    if (index != -1) {
+      _entries[index].title = title;
+      _entries[index].content = content;
+      await journalCollection.doc(id).update({
+        'title': title,
+        'content': content,
+      });
       notifyListeners();
     }
   }

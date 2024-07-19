@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mental_health_app/models/duty.dart';
+import '../models/duty.dart';
 
 class DutyProvider with ChangeNotifier {
   List<Duty> _duties = [];
@@ -10,7 +10,6 @@ class DutyProvider with ChangeNotifier {
   List<Duty> get duties => _duties;
 
   DutyProvider() {
-    _fetchDuties();
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         _fetchDuties();
@@ -23,8 +22,19 @@ class DutyProvider with ChangeNotifier {
   Future<void> _fetchDuties() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final snapshot = await dutiesCollection.where('uid', isEqualTo: user.uid).get();
-      _duties = snapshot.docs.map((doc) => Duty.fromFirestore(doc)).toList();
+      print("Fetching duties for user: ${user.uid}");
+      try {
+        final snapshot = await dutiesCollection.where('uid', isEqualTo: user.uid).get();
+        if (snapshot.docs.isEmpty) {
+          print("No duties found for user: ${user.uid}");
+        } else {
+          print("Duties found: ${snapshot.docs.length}");
+          _duties = snapshot.docs.map((doc) => Duty.fromFirestore(doc)).toList();
+          print("Fetched duties: ${_duties.length}");
+        }
+      } catch (error) {
+        print("Error fetching duties: $error");
+      }
       notifyListeners();
     }
   }
@@ -40,6 +50,17 @@ class DutyProvider with ChangeNotifier {
       duty.id = docRef.id;
       duty.uid = user.uid;
       _duties.add(duty);
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateDuty(String id, String title) async {
+    final index = _duties.indexWhere((duty) => duty.id == id);
+    if (index != -1) {
+      _duties[index].title = title;
+      await dutiesCollection.doc(id).update({
+        'title': title,
+      });
       notifyListeners();
     }
   }

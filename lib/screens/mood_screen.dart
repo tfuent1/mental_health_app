@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/mood_provider.dart';
 import '../models/mood.dart';
+import 'edit_mood_screen.dart';
 
 class MoodScreen extends StatefulWidget {
   const MoodScreen({super.key});
@@ -99,11 +100,27 @@ class _MoodScreenState extends State<MoodScreen> {
                             Text('Date: ${mood.date}'),
                           ],
                         ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            Provider.of<MoodProvider>(context, listen: false).removeMood(mood.id);
-                          },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditMoodScreen(mood: mood),
+                                  ),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                Provider.of<MoodProvider>(context, listen: false).removeMood(mood.id);
+                              },
+                            ),
+                          ],
                         ),
                       );
                     },

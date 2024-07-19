@@ -47,6 +47,7 @@ class DutiesScreen extends StatelessWidget {
           Expanded(
             child: Consumer<provider.DutyProvider>(
               builder: (context, dutyProvider, child) {
+                print("Building DutyList in DutiesScreen");
                 return DutyList(duties: dutyProvider.duties);
               },
             ),

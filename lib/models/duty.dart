@@ -6,21 +6,26 @@ class Duty {
   String title;
   bool isCompleted;
 
-  Duty({required this.id, required this.uid, required this.title, this.isCompleted = false});
+  Duty({
+    required this.id,
+    required this.uid,
+    required this.title,
+    this.isCompleted = false,
+  });
 
   factory Duty.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Duty(
       id: doc.id,
-      uid: data['userId'],
-      title: data['title'],
-      isCompleted: data['isCompleted'],
+      uid: data['uid'] ?? '',  // Handle potential null values
+      title: data['title'] ?? '',  // Handle potential null values
+      isCompleted: data['isCompleted'] ?? false,
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      'userId': uid,
+      'uid': uid,
       'title': title,
       'isCompleted': isCompleted,
     };

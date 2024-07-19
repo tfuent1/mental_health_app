@@ -10,7 +10,6 @@ class MoodProvider with ChangeNotifier {
   List<Mood> get moods => _moods;
 
   MoodProvider() {
-    _fetchMoods();
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         _fetchMoods();
@@ -41,6 +40,19 @@ class MoodProvider with ChangeNotifier {
       mood.id = docRef.id;
       mood.uid = user.uid;
       _moods.add(mood);
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateMood(String id, String name, String description) async {
+    final index = _moods.indexWhere((mood) => mood.id == id);
+    if (index != -1) {
+      _moods[index].name = name;
+      _moods[index].description = description;
+      await moodsCollection.doc(id).update({
+        'name': name,
+        'description': description,
+      });
       notifyListeners();
     }
   }

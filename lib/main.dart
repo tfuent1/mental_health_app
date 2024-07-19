@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => MoodProvider()),
         ChangeNotifierProvider(create: (_) => JournalProvider()),
-        ChangeNotifierProvider(create: (_) => DutyProvider()),
+        ChangeNotifierProvider(create: (_) => DutyProvider()), // Ensure DutyProvider is initialized here
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {

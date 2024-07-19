@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/journal_provider.dart';
 import '../widgets/journal_entry_form.dart';
 import 'journal_entry_detail_screen.dart';
+import 'edit_journal_entry_screen.dart';
 
 class JournalScreen extends StatelessWidget {
   const JournalScreen({super.key});
@@ -33,11 +34,27 @@ class JournalScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          Provider.of<JournalProvider>(context, listen: false).removeEntry(entry.id);
-                        },
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditJournalEntryScreen(entry: entry),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              Provider.of<JournalProvider>(context, listen: false).removeEntry(entry.id);
+                            },
+                          ),
+                        ],
                       ),
                     );
                   },
