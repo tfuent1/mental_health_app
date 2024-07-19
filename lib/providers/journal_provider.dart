@@ -22,25 +22,33 @@ class JournalProvider with ChangeNotifier {
   Future<void> _fetchEntries() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final snapshot = await journalCollection.where('uid', isEqualTo: user.uid).get();
-      _entries = snapshot.docs.map((doc) => JournalEntry.fromFirestore(doc)).toList();
-      notifyListeners();
+      try {
+        final snapshot = await journalCollection.where('uid', isEqualTo: user.uid).get();
+        _entries = snapshot.docs.map((doc) => JournalEntry.fromFirestore(doc)).toList();
+        notifyListeners();
+      } catch (error) {
+        print("Error fetching journal entries: $error");
+      }
     }
   }
 
   Future<void> addEntry(JournalEntry entry) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final docRef = await journalCollection.add({
-        'uid': user.uid,
-        'title': entry.title,
-        'content': entry.content,
-        'date': Timestamp.fromDate(entry.date),
-      });
-      entry.id = docRef.id;
-      entry.uid = user.uid;
-      _entries.add(entry);
-      notifyListeners();
+      try {
+        final docRef = await journalCollection.add({
+          'uid': user.uid,
+          'title': entry.title,
+          'content': entry.content,
+          'date': Timestamp.fromDate(entry.date),
+        });
+        entry.id = docRef.id;
+        entry.uid = user.uid;
+        _entries.add(entry);
+        notifyListeners();
+      } catch (error) {
+        print("Error adding journal entry: $error");
+      }
     }
   }
 

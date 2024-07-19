@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/mood.dart';
-import '../providers/mood_provider.dart';
+import '../../models/mood.dart';
+import '../../providers/mood_provider.dart';
 
 class EditMoodScreen extends StatefulWidget {
   final Mood mood;

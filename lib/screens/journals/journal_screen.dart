@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/journal_provider.dart';
-import '../widgets/journal_entry_form.dart';
+import '../../providers/journal_provider.dart';
+import '../../widgets/journal_entry_form.dart';
 import 'journal_entry_detail_screen.dart';
 import 'edit_journal_entry_screen.dart';
 

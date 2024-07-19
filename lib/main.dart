@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'providers/mood_provider.dart';
-import 'providers/journal_provider.dart';
-import 'providers/duty_provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/duty_provider.dart';
+import 'providers/journal_provider.dart';
+import 'providers/mood_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
@@ -23,9 +23,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => MoodProvider()),
+        ChangeNotifierProvider(create: (_) => DutyProvider()),
         ChangeNotifierProvider(create: (_) => JournalProvider()),
-        ChangeNotifierProvider(create: (_) => DutyProvider()), // Ensure DutyProvider is initialized here
+        ChangeNotifierProvider(create: (_) => MoodProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {

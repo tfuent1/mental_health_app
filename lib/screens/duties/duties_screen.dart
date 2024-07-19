@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mental_health_app/models/duty.dart';
+import 'package:mental_health_app/providers/duty_provider.dart';
+import 'package:mental_health_app/widgets/duty_list.dart';
 import 'package:provider/provider.dart';
-import '../models/duty.dart';
-import '../providers/duty_provider.dart' as provider;
-import '../widgets/duty_list.dart';
 
 class DutiesScreen extends StatelessWidget {
   final TextEditingController _dutyController = TextEditingController();
 
-  DutiesScreen({super.key});
+  DutiesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +32,11 @@ class DutiesScreen extends StatelessWidget {
                   onPressed: () {
                     if (_dutyController.text.isNotEmpty) {
                       final duty = Duty(
-                        id: DateTime.now().toString(),
-                        uid: '',
+                        id: '', // Will be set by Firestore
+                        uid: '', // Will be set by Firestore
                         title: _dutyController.text,
                       );
-                      Provider.of<provider.DutyProvider>(context, listen: false).addDuty(duty);
+                      Provider.of<DutyProvider>(context, listen: false).addDuty(duty);
                       _dutyController.clear();
                     }
                   },
@@ -45,9 +45,8 @@ class DutiesScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Consumer<provider.DutyProvider>(
+            child: Consumer<DutyProvider>(
               builder: (context, dutyProvider, child) {
-                print("Building DutyList in DutiesScreen");
                 return DutyList(duties: dutyProvider.duties);
               },
             ),

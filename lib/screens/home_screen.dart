@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/quote_service.dart';
 import '../widgets/navigation_widget.dart';
-import 'mood_screen.dart';
-import 'journal_screen.dart';
-import 'duties_screen.dart';
+import 'moods/mood_screen.dart';
+import 'journals/journal_screen.dart';
+import 'duties/duties_screen.dart';
 import 'profile_screen.dart';
 import '../providers/auth_provider.dart';
 

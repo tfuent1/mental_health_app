@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/duty_provider.dart';
 import '../models/duty.dart';
-import '../screens/edit_duty_screen.dart';
+import '../screens/duties/edit_duty_screen.dart';
 
 class DutyList extends StatelessWidget {
   final List<Duty> duties;

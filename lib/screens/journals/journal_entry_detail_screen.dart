@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/journal_entry.dart';
+import '../../models/journal_entry.dart';
 
 class JournalEntryDetailScreen extends StatelessWidget {
   final JournalEntry entry;

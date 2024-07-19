@@ -22,35 +22,32 @@ class DutyProvider with ChangeNotifier {
   Future<void> _fetchDuties() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      print("Fetching duties for user: ${user.uid}");
       try {
         final snapshot = await dutiesCollection.where('uid', isEqualTo: user.uid).get();
-        if (snapshot.docs.isEmpty) {
-          print("No duties found for user: ${user.uid}");
-        } else {
-          print("Duties found: ${snapshot.docs.length}");
-          _duties = snapshot.docs.map((doc) => Duty.fromFirestore(doc)).toList();
-          print("Fetched duties: ${_duties.length}");
-        }
+        _duties = snapshot.docs.map((doc) => Duty.fromFirestore(doc)).toList();
+        notifyListeners();
       } catch (error) {
         print("Error fetching duties: $error");
       }
-      notifyListeners();
     }
   }
 
   Future<void> addDuty(Duty duty) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final docRef = await dutiesCollection.add({
-        'uid': user.uid,
-        'title': duty.title,
-        'isCompleted': duty.isCompleted,
-      });
-      duty.id = docRef.id;
-      duty.uid = user.uid;
-      _duties.add(duty);
-      notifyListeners();
+      try {
+        final docRef = await dutiesCollection.add({
+          'uid': user.uid,
+          'title': duty.title,
+          'isCompleted': duty.isCompleted,
+        });
+        duty.id = docRef.id;
+        duty.uid = user.uid;
+        _duties.add(duty);
+        notifyListeners();
+      } catch (error) {
+        print("Error adding duty: $error");
+      }
     }
   }
 

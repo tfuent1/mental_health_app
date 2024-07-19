@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/duty.dart';
-import '../providers/duty_provider.dart';
+import '../../models/duty.dart';
+import '../../providers/duty_provider.dart';
 
 class EditDutyScreen extends StatefulWidget {
   final Duty duty;

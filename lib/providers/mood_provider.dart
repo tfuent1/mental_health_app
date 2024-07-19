@@ -22,25 +22,33 @@ class MoodProvider with ChangeNotifier {
   Future<void> _fetchMoods() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final snapshot = await moodsCollection.where('uid', isEqualTo: user.uid).get();
-      _moods = snapshot.docs.map((doc) => Mood.fromFirestore(doc)).toList();
-      notifyListeners();
+      try {
+        final snapshot = await moodsCollection.where('uid', isEqualTo: user.uid).get();
+        _moods = snapshot.docs.map((doc) => Mood.fromFirestore(doc)).toList();
+        notifyListeners();
+      } catch (error) {
+        print("Error fetching moods: $error");
+      }
     }
   }
 
   Future<void> addMood(Mood mood) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final docRef = await moodsCollection.add({
-        'uid': user.uid,
-        'name': mood.name,
-        'date': Timestamp.fromDate(mood.date),
-        'description': mood.description,
-      });
-      mood.id = docRef.id;
-      mood.uid = user.uid;
-      _moods.add(mood);
-      notifyListeners();
+      try {
+        final docRef = await moodsCollection.add({
+          'uid': user.uid,
+          'name': mood.name,
+          'date': Timestamp.fromDate(mood.date),
+          'description': mood.description,
+        });
+        mood.id = docRef.id;
+        mood.uid = user.uid;
+        _moods.add(mood);
+        notifyListeners();
+      } catch (error) {
+        print("Error adding mood: $error");
+      }
     }
   }
 
