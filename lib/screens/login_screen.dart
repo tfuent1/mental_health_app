@@ -1,12 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/auth_provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailOrUsernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _rememberUsername = false;
+  bool _obscureText = true;
 
-  LoginScreen({super.key});
+  @override
+  void initState() {
+    super.initState();
+    _loadRememberedUsername();
+  }
+
+  Future<void> _loadRememberedUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _emailOrUsernameController.text = prefs.getString('remembered_username') ?? '';
+      _rememberUsername = prefs.getBool('remember_username') ?? false;
+    });
+  }
+
+  Future<void> _rememberUsernamePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (_rememberUsername) {
+      await prefs.setString('remembered_username', _emailOrUsernameController.text);
+      await prefs.setBool('remember_username', true);
+    } else {
+      await prefs.remove('remembered_username');
+      await prefs.setBool('remember_username', false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +57,36 @@ class LoginScreen extends StatelessWidget {
             ),
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                ),
+              ),
+              obscureText: _obscureText,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _rememberUsername,
+                      onChanged: (value) {
+                        setState(() {
+                          _rememberUsername = value!;
+                        });
+                      },
+                    ),
+                    const Text('Remember Username'),
+                  ],
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -33,6 +94,7 @@ class LoginScreen extends StatelessWidget {
                 try {
                   await Provider.of<AuthProvider>(context, listen: false)
                       .login(_emailOrUsernameController.text, _passwordController.text);
+                  await _rememberUsernamePreference();
                   Navigator.pushReplacementNamed(context, '/home');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
