@@ -5,11 +5,10 @@ import '../models/journal_entry.dart';
 
 class JournalProvider with ChangeNotifier {
   List<JournalEntry> _entries = [];
-  final CollectionReference journalCollection = FirebaseFirestore.instance.collection('journal_entries');
+  final CollectionReference journalCollection;
 
-  List<JournalEntry> get entries => _entries;
-
-  JournalProvider() {
+  JournalProvider({CollectionReference? collection})
+      : journalCollection = collection ?? FirebaseFirestore.instance.collection('journal_entries') {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         _listenToEntries();
@@ -18,6 +17,8 @@ class JournalProvider with ChangeNotifier {
       }
     });
   }
+
+  List<JournalEntry> get entries => _entries;
 
   void _listenToEntries() {
     final user = FirebaseAuth.instance.currentUser;

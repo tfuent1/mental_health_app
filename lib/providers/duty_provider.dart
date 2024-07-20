@@ -5,11 +5,10 @@ import '../models/duty.dart';
 
 class DutyProvider with ChangeNotifier {
   List<Duty> _duties = [];
-  final CollectionReference dutiesCollection = FirebaseFirestore.instance.collection('duties');
+  final CollectionReference dutiesCollection;
 
-  List<Duty> get duties => _duties;
-
-  DutyProvider() {
+  DutyProvider({CollectionReference? collection})
+      : dutiesCollection = collection ?? FirebaseFirestore.instance.collection('duties') {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         _listenToDuties();
@@ -18,6 +17,8 @@ class DutyProvider with ChangeNotifier {
       }
     });
   }
+
+  List<Duty> get duties => _duties;
 
   void _listenToDuties() {
     final user = FirebaseAuth.instance.currentUser;

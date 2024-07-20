@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthProvider with ChangeNotifier {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth;
   User? _user;
 
-  AuthProvider() {
+  AuthProvider({FirebaseAuth? auth}) : _auth = auth ?? FirebaseAuth.instance {
     _auth.authStateChanges().listen((User? user) {
       _user = user;
       notifyListeners();

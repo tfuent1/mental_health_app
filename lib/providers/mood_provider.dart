@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/mood.dart';
 
 class MoodProvider with ChangeNotifier {
   List<Mood> _moods = [];
-  final CollectionReference moodsCollection = FirebaseFirestore.instance.collection('moods');
+  final CollectionReference moodsCollection;
 
-  List<Mood> get moods => _moods;
-
-  MoodProvider() {
+  MoodProvider({CollectionReference? collection})
+      : moodsCollection = collection ?? FirebaseFirestore.instance.collection('moods') {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         _listenToMoods();
@@ -18,6 +17,8 @@ class MoodProvider with ChangeNotifier {
       }
     });
   }
+
+  List<Mood> get moods => _moods;
 
   void _listenToMoods() {
     final user = FirebaseAuth.instance.currentUser;
