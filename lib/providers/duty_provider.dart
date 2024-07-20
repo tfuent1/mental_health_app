@@ -12,29 +12,27 @@ class DutyProvider with ChangeNotifier {
   DutyProvider() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
-        _fetchDuties();
+        _listenToDuties();
       } else {
         clearDuties();
       }
     });
   }
 
-  Future<void> _fetchDuties() async {
+  void _listenToDuties() {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      try {
-        final snapshot = await dutiesCollection.where('uid', isEqualTo: user.uid).get();
+      dutiesCollection.where('uid', isEqualTo: user.uid).snapshots().listen((snapshot) {
         _duties = snapshot.docs.map((doc) => Duty.fromFirestore(doc)).toList();
         notifyListeners();
-      } catch (error) {
-        print("Error fetching duties: $error");
-      }
+      });
     }
   }
 
   Future<void> addDuty(Duty duty) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      print("Adding duty with uid: ${user.uid}");
       try {
         final docRef = await dutiesCollection.add({
           'uid': user.uid,
@@ -43,11 +41,12 @@ class DutyProvider with ChangeNotifier {
         });
         duty.id = docRef.id;
         duty.uid = user.uid;
-        _duties.add(duty);
         notifyListeners();
       } catch (error) {
         print("Error adding duty: $error");
       }
+    } else {
+      print("User is not authenticated");
     }
   }
 
@@ -74,9 +73,19 @@ class DutyProvider with ChangeNotifier {
   }
 
   Future<void> removeDuty(String id) async {
-    await dutiesCollection.doc(id).delete();
-    _duties.removeWhere((duty) => duty.id == id);
-    notifyListeners();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      print("Deleting duty with id: $id and uid: ${user.uid}");
+      try {
+        await dutiesCollection.doc(id).delete();
+        _duties.removeWhere((duty) => duty.id == id);
+        notifyListeners();
+      } catch (error) {
+        print("Error deleting duty: $error");
+      }
+    } else {
+      print("User is not authenticated");
+    }
   }
 
   void clearDuties() {

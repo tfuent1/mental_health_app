@@ -12,29 +12,27 @@ class JournalProvider with ChangeNotifier {
   JournalProvider() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
-        _fetchEntries();
+        _listenToEntries();
       } else {
         clearEntries();
       }
     });
   }
 
-  Future<void> _fetchEntries() async {
+  void _listenToEntries() {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      try {
-        final snapshot = await journalCollection.where('uid', isEqualTo: user.uid).get();
+      journalCollection.where('uid', isEqualTo: user.uid).snapshots().listen((snapshot) {
         _entries = snapshot.docs.map((doc) => JournalEntry.fromFirestore(doc)).toList();
         notifyListeners();
-      } catch (error) {
-        print("Error fetching journal entries: $error");
-      }
+      });
     }
   }
 
   Future<void> addEntry(JournalEntry entry) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      print("Adding journal entry with uid: ${user.uid}");
       try {
         final docRef = await journalCollection.add({
           'uid': user.uid,
@@ -44,11 +42,12 @@ class JournalProvider with ChangeNotifier {
         });
         entry.id = docRef.id;
         entry.uid = user.uid;
-        _entries.add(entry);
         notifyListeners();
       } catch (error) {
         print("Error adding journal entry: $error");
       }
+    } else {
+      print("User is not authenticated");
     }
   }
 
@@ -66,9 +65,19 @@ class JournalProvider with ChangeNotifier {
   }
 
   Future<void> removeEntry(String id) async {
-    await journalCollection.doc(id).delete();
-    _entries.removeWhere((entry) => entry.id == id);
-    notifyListeners();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      print("Deleting journal entry with id: $id and uid: ${user.uid}");
+      try {
+        await journalCollection.doc(id).delete();
+        _entries.removeWhere((entry) => entry.id == id);
+        notifyListeners();
+      } catch (error) {
+        print("Error deleting journal entry: $error");
+      }
+    } else {
+      print("User is not authenticated");
+    }
   }
 
   void clearEntries() {

@@ -12,29 +12,27 @@ class MoodProvider with ChangeNotifier {
   MoodProvider() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
-        _fetchMoods();
+        _listenToMoods();
       } else {
         clearMoods();
       }
     });
   }
 
-  Future<void> _fetchMoods() async {
+  void _listenToMoods() {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      try {
-        final snapshot = await moodsCollection.where('uid', isEqualTo: user.uid).get();
+      moodsCollection.where('uid', isEqualTo: user.uid).snapshots().listen((snapshot) {
         _moods = snapshot.docs.map((doc) => Mood.fromFirestore(doc)).toList();
         notifyListeners();
-      } catch (error) {
-        print("Error fetching moods: $error");
-      }
+      });
     }
   }
 
   Future<void> addMood(Mood mood) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      print("Adding mood with uid: ${user.uid}");
       try {
         final docRef = await moodsCollection.add({
           'uid': user.uid,
@@ -44,11 +42,12 @@ class MoodProvider with ChangeNotifier {
         });
         mood.id = docRef.id;
         mood.uid = user.uid;
-        _moods.add(mood);
         notifyListeners();
       } catch (error) {
         print("Error adding mood: $error");
       }
+    } else {
+      print("User is not authenticated");
     }
   }
 
@@ -66,9 +65,19 @@ class MoodProvider with ChangeNotifier {
   }
 
   Future<void> removeMood(String id) async {
-    await moodsCollection.doc(id).delete();
-    _moods.removeWhere((mood) => mood.id == id);
-    notifyListeners();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      print("Deleting mood with id: $id and uid: ${user.uid}");
+      try {
+        await moodsCollection.doc(id).delete();
+        _moods.removeWhere((mood) => mood.id == id);
+        notifyListeners();
+      } catch (error) {
+        print("Error deleting mood: $error");
+      }
+    } else {
+      print("User is not authenticated");
+    }
   }
 
   void clearMoods() {

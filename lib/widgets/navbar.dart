@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class NavigationWidget extends StatefulWidget {
+class NavBar extends StatefulWidget {
   final Function(int) onItemTapped;
   final int selectedIndex;
 
-  const NavigationWidget({
+  const NavBar({
     Key? key,
     required this.onItemTapped,
     required this.selectedIndex,
   }) : super(key: key);
 
   @override
-  _NavigationWidgetState createState() => _NavigationWidgetState();
+  _NavBarState createState() => _NavBarState();
 }
 
-class _NavigationWidgetState extends State<NavigationWidget> {
+class _NavBarState extends State<NavBar> {
   void _onItemTapped(int index) {
     widget.onItemTapped(index);
   }

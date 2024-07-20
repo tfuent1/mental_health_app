@@ -34,6 +34,8 @@ class AuthProvider with ChangeNotifier {
         'email': email,
         // Add any other private information here
       });
+      _user = userCredential.user;
+      notifyListeners();
     } catch (e) {
       throw e;
     }
@@ -49,7 +51,9 @@ class AuthProvider with ChangeNotifier {
         }
         email = querySnapshot.docs.first.data()['email'];
       }
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      _user = userCredential.user;
+      notifyListeners();
     } catch (e) {
       throw e;
     }
@@ -57,5 +61,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> logout(BuildContext context) async {
     await _auth.signOut();
+    _user = null;
+    notifyListeners();
   }
 }
