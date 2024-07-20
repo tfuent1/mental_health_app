@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mental_health_app/models/journal_entry.dart';
 
+// ignore: subtype_of_sealed_class
 class FakeDocumentSnapshot extends Fake implements DocumentSnapshot<Map<String, dynamic>> {
   @override
   final String id;
